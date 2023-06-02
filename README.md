@@ -1,4 +1,4 @@
 # ENGR_Final
 
-# What does it do?
+What does it do?
 Running this code will...
