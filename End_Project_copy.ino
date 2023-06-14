@@ -1,6 +1,6 @@
 #include <Adafruit_CircuitPlayground.h>
 
-// variable declarations
+// Variable declarations
 const int A = 4;
 const int B = 5;
 volatile bool lbuttonState = 0; 
@@ -38,7 +38,7 @@ CircuitPlayground.playTone(700, 100);
 for(int i=0; i<10; i++){
 delay(x/10);
 CircuitPlayground.setPixelColor(i,0, 255, 0);}
-x-=500; //Lights speed up each time light pattern is played
+x-=500; // Lights speed up each time light pattern is played
 }
 
 void two_blue(){
@@ -54,7 +54,7 @@ void three_orange(){
 for(int i=0; i<10; i++){
   int temp;
   temp = CircuitPlayground.mic.soundPressureLevel(10);
-  if (temp > value) { // checks if current mic input is greater than the value
+  if (temp > value) { // Checks if current mic input is greater than the value
     value = temp;
   }
   delay(z/10 - 10);
