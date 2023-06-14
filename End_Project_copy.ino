@@ -1,9 +1,9 @@
 #include <Adafruit_CircuitPlayground.h>
 
+// variable declarations
 const int A = 4;
 const int B = 5;
-volatile int count = 0;
-volatile bool lbuttonState = 0;
+volatile bool lbuttonState = 0; 
 volatile bool switchState=0;
 volatile bool rbuttonState = 0;
 volatile bool switchFlag =0;
@@ -20,7 +20,7 @@ int type;
 int score;
 bool keepGoing = true;
 
-
+// Set up functions for buttons, switch, and the three different light patterns
 void slideSwitch(){
   switchFlag=!switchFlag;
 }
@@ -38,7 +38,7 @@ CircuitPlayground.playTone(700, 100);
 for(int i=0; i<10; i++){
 delay(x/10);
 CircuitPlayground.setPixelColor(i,0, 255, 0);}
-x-=500;
+x-=500; //Lights speed up each time light pattern is played
 }
 
 void two_blue(){
@@ -54,7 +54,7 @@ void three_orange(){
 for(int i=0; i<10; i++){
   int temp;
   temp = CircuitPlayground.mic.soundPressureLevel(10);
-  if (temp > value) {
+  if (temp > value) { // checks if current mic input is greater than the value
     value = temp;
   }
   delay(z/10 - 10);
@@ -70,7 +70,8 @@ void setYop(int newYop) {
 }
 
 void setup() {
-  Serial.begin(9600);
+  // Set up serial, buttons, switch, and random
+  Serial.begin(9600); 
   CircuitPlayground.begin();
   randomSeed(analogRead(0));
   attachInterrupt(digitalPinToInterrupt(A), lButton, RISING);
@@ -84,12 +85,14 @@ void loop() {
   rbutton = CircuitPlayground.rightButton();
   value = CircuitPlayground.mic.soundPressureLevel(10);
 
+  // Declare variables, start score at 0, and print text
   int score = 0;
   bool keepGoing = true;
   int currentCase = 0;
   Serial.println("Welcome");
   Serial.println("Easy or Hard");
 
+  // Set mode hard (switch on right) or easy (switch on left)
   if(switchFlag){
     for(int i=0; i<10; i++){
       CircuitPlayground.setPixelColor(i,255, 0, 0);
@@ -114,6 +117,7 @@ void loop() {
     Serial.println("EASY MODE");
   }
 
+  // Run practice round with one of each light pattern
   bool practiceDone = false;
   while (!practiceDone) {
     Serial.println("PRACTICE");
@@ -150,6 +154,7 @@ void loop() {
     }
   }
 
+  // Begin game. Scoring begins and light patterns are randomized
   while (keepGoing && currentCase <= 24 && x>type && y>type && z>type) {
     int mode = random(0,3);
     switch(mode){
@@ -209,6 +214,8 @@ void loop() {
       }
     }
   }
+  
+  // Once you have either reached the end of easy mode, hard mode, or played through light patterns 24 times, you win
   if (currentCase > 24 || z <=type || x <=type || y <=type){
     Serial.println("YOU WIN!");
       Serial.println("Points:");
