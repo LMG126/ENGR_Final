@@ -1,9 +1,5 @@
 #include <Adafruit_CircuitPlayground.h>
 
-float X, Y, Z;
-// int green=0;
-// int red=0;
-// int blue=0;
 const int A = 4;
 const int B = 5;
 volatile int count = 0;
@@ -13,18 +9,17 @@ volatile bool rbuttonState = 0;
 volatile bool switchFlag =0;
 volatile bool rbuttonFlag = 0;
 volatile bool lbuttonFlag = 0;
-volatile bool accelerState = 0;
-volatile bool accelerFlag = 0;
 volatile bool lbutton;
 volatile bool rbutton;
-bool acceler;
-int x=5000;
-int y=5000;
-int z=5000;
+int yop;
+int x;
+int y;
+int z;
 int value;
 int type;
 int score;
 bool keepGoing = true;
+
 
 void slideSwitch(){
   switchFlag=!switchFlag;
@@ -37,82 +32,42 @@ void lButton(){
 void rButton(){
   rbuttonFlag=1;
 }
-// void acceler(){
-//   accelerFlag = 0;
-// }
 
 void one_green(){
-  if (x==type){
-    Serial.println("YOU WIN!");
-    Serial.println("Points:");
-    Serial.println(score);
-    CircuitPlayground.clearPixels();
-    keepGoing=false;
-  }
-  else{
 CircuitPlayground.playTone(700, 100);
 for(int i=0; i<10; i++){
 delay(x/10);
 CircuitPlayground.setPixelColor(i,0, 255, 0);}
 x-=500;
-  }
-
-// if(lbuttonFlag){
-//   continue;
-//   lbuttonFlag=0;
-// }
-// else{
-//   // Serial.println("GAME OVER");
-//   // CircuitPlayground.clearPixels();
-//   // x=500;
-//   // y=500;
-//   // z=500;
-//   break;
-// }
 }
 
 void two_blue(){
-if (y==type){
-    Serial.println("YOU WIN!");
-    Serial.println("Points:");
-    Serial.println(score);
-    CircuitPlayground.clearPixels();
-    keepGoing=false;
-  }
-  else{
 CircuitPlayground.playTone(300, 100);
 for(int i=0; i<10; i++){
 delay(y/10);
  CircuitPlayground.setPixelColor(i,0, 0, 255);}
  y-=500;
-  }
 }
 
 void three_orange(){
-if (z==type){
-    Serial.println("YOU WIN!");
-    Serial.println("Points:");
-    Serial.println(score);
-    CircuitPlayground.clearPixels();
-    keepGoing=false;
-  }
-  else{
  CircuitPlayground.playTone(500,100);
 for(int i=0; i<10; i++){
-  delay(z/10);
+  int temp;
+  temp = CircuitPlayground.mic.soundPressureLevel(10);
+  if (temp > value) {
+    value = temp;
+  }
+  delay(z/10 - 10);
  CircuitPlayground.setPixelColor(i,255, 135, 12);}
  z-=500;
-}}
+}
 
-// void end_g(){
-// if (accelerFlag){
-//   Serial.println("GAME OVER");
-//   CircuitPlayground.clearPixels();
-// }
-//}
-// int getRand() { // returns 0, 1, or 2
-//   random(0,3);
-// }
+void setYop(int newYop) {
+  yop = newYop;
+  x = yop;
+  y = yop;
+  z = yop;
+}
 
 void setup() {
   Serial.begin(9600);
@@ -121,148 +76,145 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(A), lButton, RISING);
   attachInterrupt(digitalPinToInterrupt(B), rButton, RISING);
   attachInterrupt(digitalPinToInterrupt(7), slideSwitch, CHANGE);
-  while(!Serial); // Pause program till serial opens
-  Serial.println("Welcome"); // Start 
+  while(!Serial); // Pause program til serial opens
 }
 
 void loop() {
   lbutton = CircuitPlayground.leftButton();
   rbutton = CircuitPlayground.rightButton();
   value = CircuitPlayground.mic.soundPressureLevel(10);
-  X = CircuitPlayground.motionX();
-  Y = CircuitPlayground.motionY();
-  Z = CircuitPlayground.motionZ();
+
   int score = 0;
   bool keepGoing = true;
-  // green = map(X, -10, 10, -255, 255);
-  // red = map(Y, -10, 10, -255, 255);
-  // blue = map(Z, -10, 10, -255, 255);
-  for (int numCases = 3; numCases <= 12; numCases++) {
-  float currentCase = 1;
-
+  int currentCase = 0;
+  Serial.println("Welcome");
   Serial.println("Easy or Hard");
+
   if(switchFlag){
-    delay(5000);
-    type=400;
+    for(int i=0; i<10; i++){
+      CircuitPlayground.setPixelColor(i,255, 0, 0);
+    }
+    for(int i=0; i<10; i++){
+      delay(5000/10);
+      CircuitPlayground.setPixelColor(i,0, 0, 0);
+    }
+    type=200;
+    setYop(3000);
     Serial.println("HARD MODE");
     switchFlag=0;
   }
   else{
-    delay(5000);
-    type=1000;
+    for(int i=0; i<10; i++){
+      CircuitPlayground.setPixelColor(i,255, 0, 0);}
+    for(int i=0; i<10; i++){
+      delay(5000/10);
+      CircuitPlayground.setPixelColor(i,0, 0, 0);}
+    type=900;
+    setYop(5000);
     Serial.println("EASY MODE");
   }
 
-  Serial.println("PRACTICE");
-  one_green();
-  if(lbuttonFlag){
-       lbuttonFlag = 0;
-    }
-    else{
-      CircuitPlayground.clearPixels();
-      x=5000;
-      y=5000;
-      z=5000;
-      Serial.println("TRY AGAIN");
-      keepGoing = false;
-      break;
-      }
-  two_blue();
-  if(rbuttonFlag){
-       rbuttonFlag = 0;
-    }
-    else{
-      CircuitPlayground.clearPixels();
-      x=5000;
-      y=5000;
-      z=5000;
-      Serial.println("TRY AGAIN");
-      keepGoing = false;
-      break;
-    }
-  three_orange();
-  if(value>0){ // write a interrupt
-      Serial.println(z);
-    }
-    else{
-      CircuitPlayground.clearPixels();
-      x=5000;
-      y=5000;
-      z=5000;
-      Serial.println("TRY AGAIN");
-      keepGoing = false;
-      break;
-    }
-
-while (keepGoing  && currentCase <= numCases) {
-  int mode = random(0,3);
-  switch(mode){
-    case 0:
+  bool practiceDone = false;
+  while (!practiceDone) {
+    Serial.println("PRACTICE");
     one_green();
-    currentCase+=1/3;
-    if(lbuttonFlag){
-      score+=10;
-      Serial.println("Points:");
-      Serial.println(score);
-      break;
+    if (lbuttonFlag){
+      lbuttonFlag = 0;
     }
     else{
       CircuitPlayground.clearPixels();
-      x=5000;
-      y=5000;
-      z=5000;
-      Serial.println("END GAME");
-      Serial.println("Points:");
-      Serial.println(score);
-      keepGoing = false;
-      break;
+      setYop(yop);
+      Serial.println("TRY AGAIN");
+      continue;
     }
-    case 1:
     two_blue();
-    currentCase+=1/3;
     if(rbuttonFlag){
-      score += 10;
-      Serial.println("Points:");
-      Serial.println(score);
-      break;
+      rbuttonFlag = 0;
     }
     else{
       CircuitPlayground.clearPixels();
-      x=5000;
-      y=5000;
-      z=5000;
-      Serial.println("END GAME");
-      Serial.println("Points:");
-      Serial.println(score);
-      keepGoing = false;
-      break;
+      setYop(yop);
+      Serial.println("TRY AGAIN");
+      continue;
     }
-    case 2:
     three_orange();
-    currentCase+=1/3;
-    if(/*sound_timeFlag*/true){ // write a interrupt
-      score+=10;
-      Serial.println("Points:");
-      Serial.println(score);
-      break;
+    Serial.println(value); // for testing
+    if(value>70){ // write a interrupt
+      practiceDone = true;
     }
     else{
       CircuitPlayground.clearPixels();
-      x=5000;
-      y=5000;
-      z=5000;
-      Serial.println("END GAME");
-      Serial.println("Points:");
-      Serial.println(score);
-      keepGoing = false;
-      break;
+      setYop(yop);
+      Serial.println("TRY AGAIN");
+      continue;
     }
-  }
-  }
   }
 
-  // Serial.println("PRACTICE");
-  // modeControl=0;
-  // modeControl=1;
-  // modeControl=2;
+  while (keepGoing && currentCase <= 24 && x>type && y>type && z>type) {
+    int mode = random(0,3);
+    switch(mode){
+      case 0:
+      one_green();
+      currentCase+=1;
+      if(lbuttonFlag){
+        score+=10;
+        Serial.println("Points:");
+        Serial.println(score);
+        break;
+      }
+      else{
+        CircuitPlayground.clearPixels();
+        setYop(yop);
+        Serial.println("END GAME");
+        Serial.println("Points:");
+        Serial.println(score);
+        keepGoing = false;
+        break;
+      }
+      case 1:
+      two_blue();
+      currentCase+=1;
+      if(rbuttonFlag){
+        score += 10;
+        Serial.println("Points:");
+        Serial.println(score);
+        break;
+      }
+      else{
+        CircuitPlayground.clearPixels();
+        setYop(yop);
+        Serial.println("END GAME");
+        Serial.println("Points:");
+        Serial.println(score);
+        keepGoing = false;
+        break;
+      }
+      case 2:
+      three_orange();
+      currentCase+=1;
+      if(value>70){ // write a interrupt
+        score+=10;
+        Serial.println("Points:");
+        Serial.println(score);
+        break;
+      }
+      else{
+        CircuitPlayground.clearPixels();
+        setYop(yop);
+        Serial.println("END GAME");
+        Serial.println("Points:");
+        Serial.println(score);
+        keepGoing = false;
+        break;
+      }
+    }
+  }
+  if (currentCase > 24 || z <=type || x <=type || y <=type){
+    Serial.println("YOU WIN!");
+      Serial.println("Points:");
+      Serial.println(score);
+      CircuitPlayground.clearPixels();
+      setYop(yop);
+      delay(5000);
+  }
 }
