@@ -15,9 +15,9 @@ You first choose the difficulty of the game (easy or hard) by choosing if the sw
 **Orange light** = Make a loud noise<br />
 
 ### Scoring?
-After the practice round, each light pattern correctly completed is worth 10 points. You win depending on the requirements from your chosen mode or by completing 24 light patterns correctly.
-**Hard Mode:** You begin with each light giving you 3000 ms to complete the action. Once your time is at 300 ms or less for any of the light patterns, you win.
-**Easy Mode:** YOu begin with each light giving you 5000 ms to complete the action. Once your time is at 900 ms or less for any of the light patterns, you win.
+After the practice round, each light pattern correctly completed is worth 10 points. You win depending on the requirements from your chosen mode or by completing 24 light patterns correctly.<br />
+**Hard Mode:** You begin with each light giving you 3000 ms to complete the action. Once your time is at 300 ms or less for any of the light patterns, you win.<br />
+**Easy Mode:** You begin with each light giving you 5000 ms to complete the action. Once your time is at 900 ms or less for any of the light patterns, you win.
 
 ### Rules?
 1. Do the corresponding action after the initializing beep and before the lights reach the end of the board/until your time runs out.
