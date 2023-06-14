@@ -7,6 +7,7 @@ A noise (each light pattern has a different pitch) followed by a sequence of lig
 You first choose the difficulty of the game (easy or hard) by choosing if the switch is on the left or the right. After this, you are given a practice round that will run through each light pattern to allow you to learn how to play. Once this is done, the game will randomly choose a light pattern for you to match with the correct action. As you get the colors right you will have less time between the intializing beep and the end of the color (-500 ms). Depending on how the light patterns play, you may reach the end of the levels or the time constraint chosen in easy or hard mode to win.
 
 ### KEY:<br />
+(holding with cord away from you)<br />
 **Switch to Right** = Hard mode<br />
 **Switch to Left** = Easy mode<br />
 **Green light** = Left button<br />
